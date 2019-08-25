@@ -1,18 +1,32 @@
-
-<form  #myVariable="ngForm" class="form-horizontal" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-  <div class="panel panel-primary">   
+<form
+  #myVariable="ngForm"
+  class="form-horizontal"
+  [formGroup]="employeeForm"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="panel panel-primary">
     <div class="panel-heading">
       <h3 class="panel-title">Create Employee</h3>
-    </div> 
+    </div>
     <div class="panel-body">
       <!--fullName input element-->
-      <div class="form-group" [ngClass]="{'has-error': formErrors.fullName}">
+      <div class="form-group" [ngClass]="{ 'has-error': formErrors.fullName }">
         <label class="col-sm-2 control-label" for="fullName">Full Name</label>
         <div class="col-sm-8">
-          <input id="fullName" formControlName="fullName" (blur)="logValidationErrors()" type="text" class="form-control"> {{fullNameLength}}
+          <input
+            id="fullName"
+            formControlName="fullName"
+            (blur)="logValidationErrors()"
+            type="text"
+            class="form-control"
+          />
+          {{ fullNameLength }}
+          <span *ngIf="fullNameLength !== undefined">
+            --> this value is tracked by valuesChanges Observable
+          </span>
           <!-- we add blur event because valueChanges not tracked focus loose -->
-          <span class="help-block" *ngIf="formErrors.fullName"> 
-          <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
+          <span class="help-block" *ngIf="formErrors.fullName">
+            <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
             {{ formErrors.fullName }}
           </span>
         </div>
@@ -20,101 +34,186 @@
 
       <!--bloc Contact Preference-->
       <div class="form-group">
-          <label class="col-md-2 control-label">Contact Preference</label>
-          <div class="col-md-8">
-            <label class="radio-inline">
-              <input type="radio" value="email" formControlName="contactPreference">Email
-            </label>
-            <label class="radio-inline">
-              <input type="radio" value="phone" formControlName="contactPreference">Phone
-            </label>
-          </div>
+        <label class="col-md-2 control-label">Contact Preference</label>
+        <div class="col-md-8">
+          <label class="radio-inline">
+            <input
+              type="radio"
+              value="email"
+              formControlName="contactPreference"
+            />Email
+          </label>
+          <label class="radio-inline">
+            <input
+              type="radio"
+              value="phone"
+              formControlName="contactPreference"
+            />Phone
+          </label>
+        </div>
       </div>
-      
+
       <!--email input element-->
-      <div class="form-group" [ngClass]="{'has-error': formErrors.email}">
+      <div class="form-group" [ngClass]="{ 'has-error': formErrors.email }">
         <label class="col-sm-2 control-label" for="email">Email</label>
         <div class="col-sm-8">
-          <input id="email" formControlName="email" (blur)="logValidationErrors()" type="text" class="form-control" >
-          <span class="help-block" *ngIf="formErrors.email"> 
+          <input
+            id="email"
+            formControlName="email"
+            (blur)="logValidationErrors()"
+            type="text"
+            class="form-control"
+          />
+          <span class="help-block" *ngIf="formErrors.email">
             <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
-              {{ formErrors.email }}
+            {{ formErrors.email }}
           </span>
         </div>
       </div>
 
       <!--phone input element-->
-      <div class="form-group" [ngClass]="{'has-error': formErrors.phone}">
-      <label class="col-sm-2 control-label" for="email">Phone</label>
-      <div class="col-sm-8">
-        <input id="email" formControlName="phone" (blur)="logValidationErrors()" type="text" class="form-control" 
-        placeholder="add and remove dynamically validator if phone contactPreference choosen">
-        <span class="help-block" *ngIf="formErrors.phone"> 
-          <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
+      <div class="form-group" [ngClass]="{ 'has-error': formErrors.phone }">
+        <label class="col-sm-2 control-label" for="email">Phone</label>
+        <div class="col-sm-8">
+          <input
+            id="email"
+            formControlName="phone"
+            (blur)="logValidationErrors()"
+            type="text"
+            class="form-control"
+            placeholder="add and remove dynamically validator if phone contactPreference choosen"
+          />
+          <span class="help-block" *ngIf="formErrors.phone">
+            <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
             {{ formErrors.phone }}
-        </span>
+          </span>
+        </div>
       </div>
-      </div>
-    
+
       <!--debut nested form skills-->
       <div class="well">
         <div formGroupName="skills">
-          <div class="form-group" [ngClass]="{'has-error': formErrors.skillName}">
+          <div
+            class="form-group"
+            [ngClass]="{ 'has-error': formErrors.skillName }"
+          >
             <label for="skillName" class="col-sm-2 control-label">skill</label>
             <div class="col-sm-4">
-                <input id="skillName" formControlName="skillName" type="text" (blur)="logValidationErrors()"/>  
-                <span class="help-block" *ngIf="formErrors.skillName"> 
-                  <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
-                    {{ formErrors.skillName }}
-                </span>
+              <input
+                id="skillName"
+                formControlName="skillName"
+                type="text"
+                (blur)="logValidationErrors()"
+              />
+              <span class="help-block" *ngIf="formErrors.skillName">
+                <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
+                {{ formErrors.skillName }}
+              </span>
             </div>
           </div>
-  
-          <div class="form-group" [ngClass]="{'has-error': formErrors.experienceInYears}">
-            <label for="skillName" class="col-sm-2 control-label">Experience</label>
+
+          <div
+            class="form-group"
+            [ngClass]="{ 'has-error': formErrors.experienceInYears }"
+          >
+            <label for="skillName" class="col-sm-2 control-label"
+              >Experience</label
+            >
             <div class="col-sm-4">
-                <input type="text" formControlName="experienceInYears" placeholder="experience in years" (blur)="logValidationErrors()"/>  
-                <span class="help-block" *ngIf="formErrors.experienceInYears"> 
-                  <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
-                    {{ formErrors.experienceInYears }}
-                </span>
-            </div>         
+              <input
+                type="text"
+                formControlName="experienceInYears"
+                placeholder="experience in years"
+                (blur)="logValidationErrors()"
+              />
+              <span class="help-block" *ngIf="formErrors.experienceInYears">
+                <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
+                {{ formErrors.experienceInYears }}
+              </span>
+            </div>
           </div>
-  
-          <div class="form-group" [ngClass]="{'has-error': formErrors.proficiency}">
-            <label for="proficiency" class="col-md-2 control-label">Proficiency</label>
+
+          <div
+            class="form-group"
+            [ngClass]="{ 'has-error': formErrors.proficiency }"
+          >
+            <label for="proficiency" class="col-md-2 control-label"
+              >Proficiency</label
+            >
             <div class="col-md-8">
-                <label class="radio-inline">
-                    <input id="proficiency" type="radio" value="beginner" formControlName="proficiency" (blur)="logValidationErrors()"/>Beginner
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" value="intermediate" formControlName="proficiency" (blur)="logValidationErrors()"/>Intermediate
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" value="advanced" formControlName="proficiency" (blur)="logValidationErrors()"/>Advanced
-                </label> 
-                <span class="help-block" *ngIf="formErrors.proficiency"> 
-                  <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
-                    {{ formErrors.proficiency }}
-                </span>
-            </div>        
+              <label class="radio-inline">
+                <input
+                  id="proficiency"
+                  type="radio"
+                  value="beginner"
+                  formControlName="proficiency"
+                  (blur)="logValidationErrors()"
+                />Beginner
+              </label>
+              <label class="radio-inline">
+                <input
+                  type="radio"
+                  value="intermediate"
+                  formControlName="proficiency"
+                  (blur)="logValidationErrors()"
+                />Intermediate
+              </label>
+              <label class="radio-inline">
+                <input
+                  type="radio"
+                  value="advanced"
+                  formControlName="proficiency"
+                  (blur)="logValidationErrors()"
+                />Advanced
+              </label>
+              <span class="help-block" *ngIf="formErrors.proficiency">
+                <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
+                {{ formErrors.proficiency }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
       <!--fin nested form skills-->
     </div>
     <div class="panel-footer">
-        <div class="btn-toolbar">
-          <button class="btn btn-primary" type="submit" >Save</button>
-          <button class="btn btn-primary" type="button" (click)='ChargerDataWithPatchValueAndSetValue()'>ChargerDataWithPatchValueAndSetValue</button>
-          <button class="btn btn-primary" type="button" (click)='loopAndLogThrougFormGroup(employeeForm)'>loopAndLogThrougFormGroup</button>
-          <button class="btn btn-primary" type="button" (click)='logFormErrors(employeeForm)'>Log form errors</button>
-        </div>
+      <div class="btn-toolbar">
+        <button class="btn btn-primary" type="submit">Save</button>
+        <button
+          class="btn btn-primary"
+          type="button"
+          (click)="ChargerDataWithPatchValueAndSetValue()"
+        >
+          ChargerDataWithPatchValueAndSetValue()
+        </button>
+        <button
+          *ngIf="updateExperience"
+          class="btn btn-primary"
+          type="button"
+          (click)="UpdateExperienceWithPatchValue()"
+        >
+          UpdateExperienceWithPatchValue()
+        </button>
+        <button
+          class="btn btn-primary"
+          type="button"
+          (click)="loopAndLogThrougFormGroup(employeeForm)"
+        >
+          loopAndLogThrougFormGroup
+        </button>
+        <button
+          class="btn btn-primary"
+          type="button"
+          (click)="logFormErrors(employeeForm)"
+        >
+          Log form errors
+        </button>
+      </div>
     </div>
   </div>
 </form>
-Avec #myVariable="ngForm" : {{myVariable.value | json}} <br/><br/>
-Avec [formGroup]="employeeForm":{{employeeForm.value | json}}<br/><br/>
+Avec #myVariable="ngForm" : {{ myVariable.value | json }} <br /><br />
+Avec [formGroup]="employeeForm":{{ employeeForm.value | json }}<br /><br />
 
 <table border="1">
   <tr>
@@ -124,22 +223,22 @@ Avec [formGroup]="employeeForm":{{employeeForm.value | json}}<br/><br/>
   </tr>
   <tr>
     <td style="padding: 10px">
-      touched : {{ employeeForm.touched }}
-      <br/> dirty : {{ employeeForm.dirty }}
-      <br/> valid : {{ employeeForm.valid }}
-      <br/> Form Values : {{employeeForm.value | json}}
+      touched : {{ employeeForm.touched }} <br />
+      dirty : {{ employeeForm.dirty }} <br />
+      valid : {{ employeeForm.valid }} <br />
+      Form Values : {{ employeeForm.value | json }}
     </td>
     <td style="padding: 10px">
-      touched : {{ employeeForm.get('fullName').touched }}
-      <br/> dirty : {{ employeeForm.get('fullName').dirty }}
-      <br/> valid : {{ employeeForm.get('fullName').valid }}
-      <br/> FullName Value : {{employeeForm.get('fullName').value}}
+      touched : {{ employeeForm.get("fullName").touched }} <br />
+      dirty : {{ employeeForm.get("fullName").dirty }} <br />
+      valid : {{ employeeForm.get("fullName").valid }} <br />
+      FullName Value : {{ employeeForm.get("fullName").value }}
     </td>
     <td style="padding: 10px">
-      touched : {{ employeeForm.get('email').touched }}
-      <br/> dirty : {{ employeeForm.get('email').dirty }}
-      <br/> valid : {{ employeeForm.get('email').valid }}
-      <br/> FullName Value : {{employeeForm.get('email').value}}
+      touched : {{ employeeForm.get("email").touched }} <br />
+      dirty : {{ employeeForm.get("email").dirty }} <br />
+      valid : {{ employeeForm.get("email").valid }} <br />
+      FullName Value : {{ employeeForm.get("email").value }}
     </td>
   </tr>
 </table>
