@@ -1,4 +1,14 @@
+# Launch
+
+ng serve -o
+
+then open console (F12 with chrome)
+
+Actually, when wne try to save informations, these ones only displayed in console.
+
 # Angular6App
+
+This project is in progress. It regroups most importants concepts in Angular
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
 
