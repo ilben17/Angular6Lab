@@ -3,7 +3,8 @@ import {
   FormGroup,
   FormControl,
   FormBuilder,
-  Validators
+  Validators,
+  AbstractControl
 } from "@angular/forms";
 
 @Component({
@@ -24,7 +25,8 @@ export class CreateEmployeeComponent implements OnInit {
       maxlength: "Full Name must be less than 15 characters."
     },
     email: {
-      required: "Email is required."
+      required: "Email is required.",
+      emailDomain: "Email domain should be 'iliestech'"
     },
     phone: {
       required: "Phone is required."
@@ -71,7 +73,7 @@ export class CreateEmployeeComponent implements OnInit {
       ],
       // Si un seul validator alors pas la peine de le mettre dans un array, ça sera comme ça --> ['', Validators.required]
       contactPreference: ["email"],
-      email: ["", Validators.required],
+      email: ["", [Validators.required, customValidationEmailDomain]],
       phone: [""],
       skills: this.fb.group({
         skillName: ["", Validators.required],
@@ -187,5 +189,17 @@ export class CreateEmployeeComponent implements OnInit {
 
   onSubmit(): void {
     console.log(this.employeeForm.value);
+  }
+}
+
+function customValidationEmailDomain(
+  control: AbstractControl
+): { [key: string]: any } | null {
+  const email: string = control.value;
+  const domain = email.substring(email.lastIndexOf("@") + 1);
+  if (domain.toUpperCase() !== "ILIESTECH") {
+    return { emailDomain: true };
+  } else {
+    return null;
   }
 }

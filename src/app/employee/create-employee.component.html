@@ -63,6 +63,7 @@
             (blur)="logValidationErrors()"
             type="text"
             class="form-control"
+            placeholder="validation domain is customised using custom Validator"
           />
           <span class="help-block" *ngIf="formErrors.email">
             <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
@@ -76,7 +77,7 @@
         <label class="col-sm-2 control-label" for="email">Phone</label>
         <div class="col-sm-8">
           <input
-            id="email"
+            id="phone"
             formControlName="phone"
             (blur)="logValidationErrors()"
             type="text"
