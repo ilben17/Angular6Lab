@@ -1,9 +1,4 @@
-<form
-  #myVariable="ngForm"
-  class="form-horizontal"
-  [formGroup]="employeeForm"
-  (ngSubmit)="onSubmit()"
->
+<form #myVariable="ngForm" class="form-horizontal" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h3 class="panel-title">Create Employee</h3>
@@ -13,13 +8,8 @@
       <div class="form-group" [ngClass]="{ 'has-error': formErrors.fullName }">
         <label class="col-sm-2 control-label" for="fullName">Full Name</label>
         <div class="col-sm-8">
-          <input
-            id="fullName"
-            formControlName="fullName"
-            (blur)="logValidationErrors()"
-            type="text"
-            class="form-control"
-          />
+          <input id="fullName" formControlName="fullName" (blur)="logValidationErrors()" type="text"
+            class="form-control" />
           {{ fullNameLength }}
           <span *ngIf="fullNameLength !== undefined">
             --> this value is tracked by valuesChanges Observable
@@ -37,38 +27,39 @@
         <label class="col-md-2 control-label">Contact Preference</label>
         <div class="col-md-8">
           <label class="radio-inline">
-            <input
-              type="radio"
-              value="email"
-              formControlName="contactPreference"
-            />Email
+            <input type="radio" value="email" formControlName="contactPreference" />Email
           </label>
           <label class="radio-inline">
-            <input
-              type="radio"
-              value="phone"
-              formControlName="contactPreference"
-            />Phone
+            <input type="radio" value="phone" formControlName="contactPreference" />Phone
           </label>
         </div>
       </div>
 
-      <!--email input element-->
-      <div class="form-group" [ngClass]="{ 'has-error': formErrors.email }">
-        <label class="col-sm-2 control-label" for="email">Email</label>
-        <div class="col-sm-8">
-          <input
-            id="email"
-            formControlName="email"
-            (blur)="logValidationErrors()"
-            type="text"
-            class="form-control"
-            placeholder="validation domain is customised using custom Validator"
-          />
-          <span class="help-block" *ngIf="formErrors.email">
-            <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
-            {{ formErrors.email }}
-          </span>
+      <div formGroupName="emailGroup">
+        <!--email input element-->
+        <div class="form-group" [ngClass]="{ 'has-error': formErrors.email }">
+          <label class="col-sm-2 control-label" for="email">Email</label>
+          <div class="col-sm-8">
+            <input id="email" formControlName="email" (blur)="logValidationErrors()" type="text" class="form-control"
+              placeholder="validation domain is customised using custom Validator" />
+            <span class="help-block" *ngIf="formErrors.email">
+              <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
+              {{ formErrors.email }}
+            </span>
+          </div>
+        </div>
+
+        <!--email validation input element-->
+        <div class="form-group" [ngClass]="{ 'has-error': formErrors.emailConfirmation|| formErrors.emailGroup  }">
+          <label class="col-sm-2 control-label" for="email">Email confirmation</label>
+          <div class="col-sm-8">
+            <input id="emailConfirmation" formControlName="emailConfirmation" (blur)="logValidationErrors()" type="text"
+              class="form-control" placeholder="confirm your email" />
+            <span class="help-block" *ngIf="formErrors.emailConfirmation || formErrors.emailGroup">
+              <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
+              {{ formErrors.emailConfirmation ? formErrors.emailConfirmation : formErrors.emailGroup }}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -76,14 +67,8 @@
       <div class="form-group" [ngClass]="{ 'has-error': formErrors.phone }">
         <label class="col-sm-2 control-label" for="email">Phone</label>
         <div class="col-sm-8">
-          <input
-            id="phone"
-            formControlName="phone"
-            (blur)="logValidationErrors()"
-            type="text"
-            class="form-control"
-            placeholder="add and remove dynamically validator if phone contactPreference choosen"
-          />
+          <input id="phone" formControlName="phone" (blur)="logValidationErrors()" type="text" class="form-control"
+            placeholder="add and remove dynamically validator if phone contactPreference choosen" />
           <span class="help-block" *ngIf="formErrors.phone">
             <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
             {{ formErrors.phone }}
@@ -94,18 +79,10 @@
       <!--debut nested form skills-->
       <div class="well">
         <div formGroupName="skills">
-          <div
-            class="form-group"
-            [ngClass]="{ 'has-error': formErrors.skillName }"
-          >
+          <div class="form-group" [ngClass]="{ 'has-error': formErrors.skillName }">
             <label for="skillName" class="col-sm-2 control-label">skill</label>
             <div class="col-sm-4">
-              <input
-                id="skillName"
-                formControlName="skillName"
-                type="text"
-                (blur)="logValidationErrors()"
-              />
+              <input id="skillName" formControlName="skillName" type="text" (blur)="logValidationErrors()" />
               <span class="help-block" *ngIf="formErrors.skillName">
                 <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
                 {{ formErrors.skillName }}
@@ -113,20 +90,11 @@
             </div>
           </div>
 
-          <div
-            class="form-group"
-            [ngClass]="{ 'has-error': formErrors.experienceInYears }"
-          >
-            <label for="skillName" class="col-sm-2 control-label"
-              >Experience</label
-            >
+          <div class="form-group" [ngClass]="{ 'has-error': formErrors.experienceInYears }">
+            <label for="skillName" class="col-sm-2 control-label">Experience</label>
             <div class="col-sm-4">
-              <input
-                type="text"
-                formControlName="experienceInYears"
-                placeholder="experience in years"
-                (blur)="logValidationErrors()"
-              />
+              <input type="text" formControlName="experienceInYears" placeholder="experience in years"
+                (blur)="logValidationErrors()" />
               <span class="help-block" *ngIf="formErrors.experienceInYears">
                 <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
                 {{ formErrors.experienceInYears }}
@@ -134,38 +102,20 @@
             </div>
           </div>
 
-          <div
-            class="form-group"
-            [ngClass]="{ 'has-error': formErrors.proficiency }"
-          >
-            <label for="proficiency" class="col-md-2 control-label"
-              >Proficiency</label
-            >
+          <div class="form-group" [ngClass]="{ 'has-error': formErrors.proficiency }">
+            <label for="proficiency" class="col-md-2 control-label">Proficiency</label>
             <div class="col-md-8">
               <label class="radio-inline">
-                <input
-                  id="proficiency"
-                  type="radio"
-                  value="beginner"
-                  formControlName="proficiency"
-                  (blur)="logValidationErrors()"
-                />Beginner
+                <input id="proficiency" type="radio" value="beginner" formControlName="proficiency"
+                  (blur)="logValidationErrors()" />Beginner
               </label>
               <label class="radio-inline">
-                <input
-                  type="radio"
-                  value="intermediate"
-                  formControlName="proficiency"
-                  (blur)="logValidationErrors()"
-                />Intermediate
+                <input type="radio" value="intermediate" formControlName="proficiency"
+                  (blur)="logValidationErrors()" />Intermediate
               </label>
               <label class="radio-inline">
-                <input
-                  type="radio"
-                  value="advanced"
-                  formControlName="proficiency"
-                  (blur)="logValidationErrors()"
-                />Advanced
+                <input type="radio" value="advanced" formControlName="proficiency"
+                  (blur)="logValidationErrors()" />Advanced
               </label>
               <span class="help-block" *ngIf="formErrors.proficiency">
                 <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
@@ -180,33 +130,17 @@
     <div class="panel-footer">
       <div class="btn-toolbar">
         <button class="btn btn-primary" type="submit">Save</button>
-        <button
-          class="btn btn-primary"
-          type="button"
-          (click)="ChargerDataWithPatchValueAndSetValue()"
-        >
+        <button class="btn btn-primary" type="button" (click)="ChargerDataWithPatchValueAndSetValue()">
           ChargerDataWithPatchValueAndSetValue()
         </button>
-        <button
-          *ngIf="updateExperience"
-          class="btn btn-primary"
-          type="button"
-          (click)="UpdateExperienceWithPatchValue()"
-        >
+        <button *ngIf="updateExperience" class="btn btn-primary" type="button"
+          (click)="UpdateExperienceWithPatchValue()">
           UpdateExperienceWithPatchValue()
         </button>
-        <button
-          class="btn btn-primary"
-          type="button"
-          (click)="loopAndLogThrougFormGroup(employeeForm)"
-        >
+        <button class="btn btn-primary" type="button" (click)="loopAndLogThrougFormGroup(employeeForm)">
           loopAndLogThrougFormGroup
         </button>
-        <button
-          class="btn btn-primary"
-          type="button"
-          (click)="logFormErrors(employeeForm)"
-        >
+        <button class="btn btn-primary" type="button" (click)="logFormErrors(employeeForm)">
           Log form errors
         </button>
       </div>
@@ -236,10 +170,10 @@ Avec [formGroup]="employeeForm":{{ employeeForm.value | json }}<br /><br />
       FullName Value : {{ employeeForm.get("fullName").value }}
     </td>
     <td style="padding: 10px">
-      touched : {{ employeeForm.get("email").touched }} <br />
-      dirty : {{ employeeForm.get("email").dirty }} <br />
-      valid : {{ employeeForm.get("email").valid }} <br />
-      FullName Value : {{ employeeForm.get("email").value }}
+      touched : {{ employeeForm.get("emailGroup").get("email").touched }} <br />
+      dirty : {{ employeeForm.get("emailGroup").get("email").dirty }} <br />
+      valid : {{ employeeForm.get("emailGroup").get("email").valid }} <br />
+      FullName Value : {{ employeeForm.get("emailGroup").get("email").value }}
     </td>
   </tr>
 </table>

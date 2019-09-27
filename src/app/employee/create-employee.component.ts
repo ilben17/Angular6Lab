@@ -26,7 +26,13 @@ export class CreateEmployeeComponent implements OnInit {
     },
     email: {
       required: "Email is required.",
-      emailDomain: "Email domain should be 'iliestech'"
+      emailDomain: "Email domain should be 'canada.com'"
+    },
+    emailConfirmation: {
+      required: "please confirm your email"
+    },
+    emailGroup: {
+      mismatch: "email entered do not match with email confirmed"
     },
     phone: {
       required: "Phone is required."
@@ -47,12 +53,14 @@ export class CreateEmployeeComponent implements OnInit {
   formErrors = {
     fullName: "",
     email: "",
+    emailConfirmation: "",
+    emailGroup: "",
     skillName: "",
     experienceInYears: "",
     proficiency: ""
   };
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
     // Avec FormGroup & FormControl
@@ -73,7 +81,19 @@ export class CreateEmployeeComponent implements OnInit {
       ],
       // Si un seul validator alors pas la peine de le mettre dans un array, ça sera comme ça --> ['', Validators.required]
       contactPreference: ["email"],
-      email: ["", [Validators.required, customValidationEmailDomain]],
+      emailGroup: this.fb.group(
+        {
+          email: [
+            "",
+            [Validators.required, customValidationEmailDomain("canada.com")]
+          ],
+          emailConfirmation: ["", [Validators.required]]
+        },
+        {
+          validators: checkEmailMatching
+        } /*attach this nested group to checkEmailMatching function*/
+      ),
+
       phone: [""],
       skills: this.fb.group({
         skillName: ["", Validators.required],
@@ -106,27 +126,24 @@ export class CreateEmployeeComponent implements OnInit {
     Object.keys(group.controls).forEach(key => {
       const abstractControl = group.get(key);
 
-      if (abstractControl instanceof FormGroup) {
-        this.logValidationErrors(abstractControl);
-      } else {
-        //effacer d'abord message historique
-        this.formErrors[key] = "";
+      //effacer d'abord message historique
+      this.formErrors[key] = "";
 
-        if (
-          abstractControl &&
-          !abstractControl.valid &&
-          (abstractControl.touched || abstractControl.dirty)
-        ) {
-          const messages = this.validationMessages[key];
+      if (abstractControl &&
+        !abstractControl.valid &&
+        (abstractControl.touched || abstractControl.dirty)) {
+        const messages = this.validationMessages[key];
 
-          //console.log(abstractGroup.errors) si par exemple abstractGroup concerne fullName
-          //et fullname pas renseigné --> {required: true}
+        //console.log(abstractGroup.errors) si par exemple abstractGroup concerne fullName
+        //et fullname pas renseigné --> {required: true}
 
-          for (const errorKey /*exemple required*/ in abstractControl.errors) {
-            if (errorKey) {
-              this.formErrors[key] += messages[errorKey] + " ";
-            }
+        for (const errorKey /*exemple required*/ in abstractControl.errors) {
+          if (errorKey) {
+            this.formErrors[key] += messages[errorKey] + " ";
           }
+        }
+        if (abstractControl instanceof FormGroup) {
+          this.logValidationErrors(abstractControl);
         }
       }
     });
@@ -192,14 +209,27 @@ export class CreateEmployeeComponent implements OnInit {
   }
 }
 
-function customValidationEmailDomain(
-  control: AbstractControl
+function customValidationEmailDomain(emailDomain: string) {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const email: string = control.value;
+    const domain = email.substring(email.lastIndexOf("@") + 1);
+    if (email == "" || domain.toUpperCase() === emailDomain.toUpperCase()) {
+      return null;
+    } else {
+      return { emailDomain: true };
+    }
+  };
+}
+
+//cette fonction doit être attachée au nested group emailGroup
+function checkEmailMatching(
+  emailGroup: AbstractControl
 ): { [key: string]: any } | null {
-  const email: string = control.value;
-  const domain = email.substring(email.lastIndexOf("@") + 1);
-  if (domain.toUpperCase() !== "ILIESTECH") {
-    return { emailDomain: true };
-  } else {
+  const emailControl = emailGroup.get("email");
+  const emailConfirmedControl = emailGroup.get("emailConfirmation");
+  if (emailConfirmedControl.pristine /*i.e pas de saisie encore*/ ||
+    emailControl.value === emailConfirmedControl.value) {
     return null;
   }
+  return { 'mismatch': true };
 }
