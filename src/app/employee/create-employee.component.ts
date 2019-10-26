@@ -4,7 +4,8 @@ import {
   FormControl,
   FormBuilder,
   Validators,
-  AbstractControl
+  AbstractControl,
+  FormArray
 } from "@angular/forms";
 
 @Component({
@@ -36,28 +37,12 @@ export class CreateEmployeeComponent implements OnInit {
     },
     phone: {
       required: "Phone is required."
-    },
-    skillName: {
-      required: "Skill Name is required."
-    },
-    experienceInYears: {
-      required: "Experience is required."
-    },
-    proficiency: {
-      required: "Proficiency is required."
     }
   };
 
   // This object will hold the messages to be displayed to the user
   // Notice, each key in this object has the same name as the corresponding form control
   formErrors = {
-    fullName: "",
-    email: "",
-    emailConfirmation: "",
-    emailGroup: "",
-    skillName: "",
-    experienceInYears: "",
-    proficiency: ""
   };
 
   constructor(private fb: FormBuilder) { }
@@ -95,11 +80,9 @@ export class CreateEmployeeComponent implements OnInit {
       ),
 
       phone: [""],
-      skills: this.fb.group({
-        skillName: ["", Validators.required],
-        experienceInYears: ["", Validators.required],
-        proficiency: ["", Validators.required]
-      })
+      skills: this.fb.array([
+        this.addSkillsFormGroup()
+      ])
     });
 
     // subscribing to valueChanges. This method is exposed in AbstractControl so inherited by FormGroup and FormControl.
@@ -121,6 +104,18 @@ export class CreateEmployeeComponent implements OnInit {
       });
   } // End ngOnInit()
 
+  addSkillsFormGroup(): FormGroup {
+    return this.fb.group({
+      skillName: ["", Validators.required],
+      experienceInYears: ["", Validators.required],
+      proficiency: ["", Validators.required]
+    })
+  }
+
+  AddSkillButtonClick(): void {
+    (<FormArray>this.employeeForm.get('skills')).push(this.addSkillsFormGroup());
+  }
+
   //cette methode souscrit a valuesChange (voir ngOnInt)
   logValidationErrors(group: FormGroup = this.employeeForm) {
     Object.keys(group.controls).forEach(key => {
@@ -132,8 +127,8 @@ export class CreateEmployeeComponent implements OnInit {
       if (abstractControl &&
         !abstractControl.valid &&
         (abstractControl.touched || abstractControl.dirty)) {
-        const messages = this.validationMessages[key];
 
+        const messages = this.validationMessages[key];
         //console.log(abstractGroup.errors) si par exemple abstractGroup concerne fullName
         //et fullname pas renseigné --> {required: true}
 
@@ -147,6 +142,18 @@ export class CreateEmployeeComponent implements OnInit {
         }
       }
     });
+  }
+
+  loadData(): void {
+    const formArray = this.fb.array([
+      new FormControl('Elie', Validators.required),
+      new FormGroup({
+        country: new FormControl('defaultCountry', Validators.required)
+      })
+    ]);
+    formArray.push(new FormControl('ABC'));
+
+    console.log(formArray.at(formArray.length - 1).value)
   }
 
   ChargerDataWithPatchValueAndSetValue(): void {

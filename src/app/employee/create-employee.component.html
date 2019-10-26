@@ -78,49 +78,52 @@
 
       <!--debut nested form skills-->
       <div class="well">
-        <div formGroupName="skills">
-          <div class="form-group" [ngClass]="{ 'has-error': formErrors.skillName }">
-            <label for="skillName" class="col-sm-2 control-label">skill</label>
-            <div class="col-sm-4">
-              <input id="skillName" formControlName="skillName" type="text" (blur)="logValidationErrors()" />
-              <span class="help-block" *ngIf="formErrors.skillName">
-                <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
-                {{ formErrors.skillName }}
-              </span>
-            </div>
+        <div class="form-group">
+          <div class="col-md-offset-2 col-md-4">
+            <button type="button" class="btn btn-primary" (click)="AddSkillButtonClick()">Add Skill</button>
           </div>
-
-          <div class="form-group" [ngClass]="{ 'has-error': formErrors.experienceInYears }">
-            <label for="skillName" class="col-sm-2 control-label">Experience</label>
-            <div class="col-sm-4">
-              <input type="text" formControlName="experienceInYears" placeholder="experience in years"
-                (blur)="logValidationErrors()" />
-              <span class="help-block" *ngIf="formErrors.experienceInYears">
-                <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
-                {{ formErrors.experienceInYears }}
-              </span>
+        </div>
+        <div formArrayName="skills" *ngFor="let skill of employeeForm.get('skills').controls; let i=index">
+          <div [formGroupName]="i">
+            <div class="form-group" [ngClass]="{ 'has-error':  skill.controls.skillName.invalid && skill.controls.skillName.touched }">
+              <label [attr.for]="'skillName'+i" class="col-sm-2 control-label">skill {{i+1}}</label>
+              <div class="col-sm-4">
+                <input [id]="'skillName'+i" formControlName="skillName" type="text" />
+                <span class="help-block" *ngIf= "skill.get('skillName').errors?.required && skill.controls.skillName.touched">
+                  <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
+                  nom obligatoire
+                </span>
+              </div>
             </div>
-          </div>
 
-          <div class="form-group" [ngClass]="{ 'has-error': formErrors.proficiency }">
-            <label for="proficiency" class="col-md-2 control-label">Proficiency</label>
-            <div class="col-md-8">
-              <label class="radio-inline">
-                <input id="proficiency" type="radio" value="beginner" formControlName="proficiency"
-                  (blur)="logValidationErrors()" />Beginner
-              </label>
-              <label class="radio-inline">
-                <input type="radio" value="intermediate" formControlName="proficiency"
-                  (blur)="logValidationErrors()" />Intermediate
-              </label>
-              <label class="radio-inline">
-                <input type="radio" value="advanced" formControlName="proficiency"
-                  (blur)="logValidationErrors()" />Advanced
-              </label>
-              <span class="help-block" *ngIf="formErrors.proficiency">
-                <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
-                {{ formErrors.proficiency }}
-              </span>
+            <div class="form-group" [ngClass]="{ 'has-error': skill.controls.experienceInYears.invalid && skill.controls.experienceInYears.touched  }">
+              <label [attr.for]="'experienceInYears'+i" class="col-sm-2 control-label">Experience {{i+1}}</label>
+              <div class="col-sm-4">
+                <input [id] = "'experienceInYears'+i" type="text" formControlName="experienceInYears" placeholder="experience in years"/>
+                <span class="help-block" *ngIf="skill.controls.experienceInYears.errors?.required && skill.controls.experienceInYears.touched">
+                  <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
+                  qte experience required
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group" [ngClass]="{ 'has-error': skill.controls.proficiency.invalid && skill.controls.proficiency.touched }">
+              <label class="col-md-2 control-label">Proficiency</label>
+              <div class="col-md-8">
+                <label class="radio-inline">
+                  <input type="radio" value="beginner" formControlName="proficiency"/>Beginner
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" value="intermediate" formControlName="proficiency"/>Intermediate
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" value="advanced" formControlName="proficiency"/>Advanced
+                </label>
+                <span class="help-block" *ngIf="skill.controls.proficiency.errors?.required && skill.controls.proficiency.touched">
+                  <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
+                  niveau required
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -130,6 +133,9 @@
     <div class="panel-footer">
       <div class="btn-toolbar">
         <button class="btn btn-primary" type="submit">Save</button>
+        <button class="btn btn-primary" type="button" (click)="loadData()">
+          Test-formarray
+        </button>
         <button class="btn btn-primary" type="button" (click)="ChargerDataWithPatchValueAndSetValue()">
           ChargerDataWithPatchValueAndSetValue()
         </button>

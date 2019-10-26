@@ -1,4 +1,4 @@
-// {
+ {
 //   "extends": "tslint:recommended",
 //   "rulesDirectory": ["codelyzer"],
 //   "rules": {
@@ -48,4 +48,4 @@
 //     "component-class-suffix": true,
 //     "directive-class-suffix": true
 //   }
-// }
+ }
