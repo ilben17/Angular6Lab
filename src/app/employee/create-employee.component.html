@@ -9,7 +9,7 @@
         <label class="col-sm-2 control-label" for="fullName">Full Name</label>
         <div class="col-sm-8">
           <input id="fullName" formControlName="fullName" (blur)="logValidationErrors()" type="text"
-            class="form-control" />
+                 class="form-control"/>
           {{ fullNameLength }}
           <span *ngIf="fullNameLength !== undefined">
             --> this value is tracked by valuesChanges Observable
@@ -27,10 +27,10 @@
         <label class="col-md-2 control-label">Contact Preference</label>
         <div class="col-md-8">
           <label class="radio-inline">
-            <input type="radio" value="email" formControlName="contactPreference" />Email
+            <input type="radio" value="email" formControlName="contactPreference"/>Email
           </label>
           <label class="radio-inline">
-            <input type="radio" value="phone" formControlName="contactPreference" />Phone
+            <input type="radio" value="phone" formControlName="contactPreference"/>Phone
           </label>
         </div>
       </div>
@@ -41,7 +41,7 @@
           <label class="col-sm-2 control-label" for="email">Email</label>
           <div class="col-sm-8">
             <input id="email" formControlName="email" (blur)="logValidationErrors()" type="text" class="form-control"
-              placeholder="validation domain is customised using custom Validator" />
+                   placeholder="validation domain is customised using custom Validator"/>
             <span class="help-block" *ngIf="formErrors.email">
               <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
               {{ formErrors.email }}
@@ -54,7 +54,7 @@
           <label class="col-sm-2 control-label" for="email">Email confirmation</label>
           <div class="col-sm-8">
             <input id="emailConfirmation" formControlName="emailConfirmation" (blur)="logValidationErrors()" type="text"
-              class="form-control" placeholder="confirm your email" />
+                   class="form-control" placeholder="confirm your email"/>
             <span class="help-block" *ngIf="formErrors.emailConfirmation || formErrors.emailGroup">
               <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
               {{ formErrors.emailConfirmation ? formErrors.emailConfirmation : formErrors.emailGroup }}
@@ -68,7 +68,7 @@
         <label class="col-sm-2 control-label" for="email">Phone</label>
         <div class="col-sm-8">
           <input id="phone" formControlName="phone" (blur)="logValidationErrors()" type="text" class="form-control"
-            placeholder="add and remove dynamically validator if phone contactPreference choosen" />
+                 placeholder="add and remove dynamically validator if phone contactPreference choosen"/>
           <span class="help-block" *ngIf="formErrors.phone">
             <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
             {{ formErrors.phone }}
@@ -80,34 +80,50 @@
       <div class="well">
         <div class="form-group">
           <div class="col-md-offset-2 col-md-4">
-            <button type="button" class="btn btn-primary" (click)="AddSkillButtonClick()">Add Skill</button>
+            <button type="button" class="btn btn-primary" (click)="AddSkillButtonClick()"
+                    [disabled]="employeeForm.get('skills').invalid">Add Skill
+            </button>
+            <p class="alert-warning">you must fill in all fields before you can add a new skill form</p>
           </div>
         </div>
         <div formArrayName="skills" *ngFor="let skill of employeeForm.get('skills').controls; let i=index">
+          <hr *ngIf="i>0">
           <div [formGroupName]="i">
-            <div class="form-group" [ngClass]="{ 'has-error':  skill.controls.skillName.invalid && skill.controls.skillName.touched }">
-              <label [attr.for]="'skillName'+i" class="col-sm-2 control-label">skill {{i+1}}</label>
+            <div class="form-group"
+                 [ngClass]="{ 'has-error':  skill.controls.skillName.invalid && skill.controls.skillName.touched }">
+              <label class="col-sm-2 control-label" [attr.for]="'skillName'+i">skill {{i + 1}}</label>
               <div class="col-sm-4">
-                <input [id]="'skillName'+i" formControlName="skillName" type="text" />
-                <span class="help-block" *ngIf= "skill.get('skillName').errors?.required && skill.controls.skillName.touched">
+                <input [id]="'skillName'+i" formControlName="skillName" type="text"/>
+                <span class="help-block"
+                      *ngIf="skill.get('skillName').errors?.required && skill.controls.skillName.touched">
                   <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
                   nom obligatoire
                 </span>
               </div>
+              <div class="col-sm-6" *ngIf="employeeForm.get('skills').length >= 2">
+                <button type="button" class="btn btn-danger btn-sm pull-right"
+                        title="Remove this skill" (click)="removeSkillsButtonClicked(i)">
+                  <span class="glyphicon glyphicon-remove "></span>
+                </button>
+              </div>
             </div>
 
-            <div class="form-group" [ngClass]="{ 'has-error': skill.controls.experienceInYears.invalid && skill.controls.experienceInYears.touched  }">
-              <label [attr.for]="'experienceInYears'+i" class="col-sm-2 control-label">Experience {{i+1}}</label>
+            <div class="form-group"
+                 [ngClass]="{ 'has-error': skill.controls.experienceInYears.invalid && skill.controls.experienceInYears.touched  }">
+              <label [attr.for]="'experienceInYears'+i" class="col-sm-2 control-label">Experience {{i + 1}}</label>
               <div class="col-sm-4">
-                <input [id] = "'experienceInYears'+i" type="text" formControlName="experienceInYears" placeholder="experience in years"/>
-                <span class="help-block" *ngIf="skill.controls.experienceInYears.errors?.required && skill.controls.experienceInYears.touched">
+                <input [id]="'experienceInYears'+i" type="text" formControlName="experienceInYears"
+                       placeholder="experience in years"/>
+                <span class="help-block"
+                      *ngIf="skill.controls.experienceInYears.errors?.required && skill.controls.experienceInYears.touched">
                   <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
                   qte experience required
                 </span>
               </div>
             </div>
 
-            <div class="form-group" [ngClass]="{ 'has-error': skill.controls.proficiency.invalid && skill.controls.proficiency.touched }">
+            <div class="form-group"
+                 [ngClass]="{ 'has-error': skill.controls.proficiency.invalid && skill.controls.proficiency.touched }">
               <label class="col-md-2 control-label">Proficiency</label>
               <div class="col-md-8">
                 <label class="radio-inline">
@@ -119,7 +135,8 @@
                 <label class="radio-inline">
                   <input type="radio" value="advanced" formControlName="proficiency"/>Advanced
                 </label>
-                <span class="help-block" *ngIf="skill.controls.proficiency.errors?.required && skill.controls.proficiency.touched">
+                <span class="help-block"
+                      *ngIf="skill.controls.proficiency.errors?.required && skill.controls.proficiency.touched">
                   <!-- help-block pour la couleur rouge, ngIf pour pas d'anomalie en cas de refresh de la page-->
                   niveau required
                 </span>
@@ -140,7 +157,7 @@
           ChargerDataWithPatchValueAndSetValue()
         </button>
         <button *ngIf="updateExperience" class="btn btn-primary" type="button"
-          (click)="UpdateExperienceWithPatchValue()">
+                (click)="UpdateExperienceWithPatchValue()">
           UpdateExperienceWithPatchValue()
         </button>
         <button class="btn btn-primary" type="button" (click)="loopAndLogThrougFormGroup(employeeForm)">
@@ -153,8 +170,8 @@
     </div>
   </div>
 </form>
-Avec #myVariable="ngForm" : {{ myVariable.value | json }} <br /><br />
-Avec [formGroup]="employeeForm":{{ employeeForm.value | json }}<br /><br />
+Avec #myVariable="ngForm" : {{ myVariable.value | json }} <br/><br/>
+Avec [formGroup]="employeeForm":{{ employeeForm.value | json }}<br/><br/>
 
 <table border="1">
   <tr>
@@ -164,21 +181,21 @@ Avec [formGroup]="employeeForm":{{ employeeForm.value | json }}<br /><br />
   </tr>
   <tr>
     <td style="padding: 10px">
-      touched : {{ employeeForm.touched }} <br />
-      dirty : {{ employeeForm.dirty }} <br />
-      valid : {{ employeeForm.valid }} <br />
+      touched : {{ employeeForm.touched }} <br/>
+      dirty : {{ employeeForm.dirty }} <br/>
+      valid : {{ employeeForm.valid }} <br/>
       Form Values : {{ employeeForm.value | json }}
     </td>
     <td style="padding: 10px">
-      touched : {{ employeeForm.get("fullName").touched }} <br />
-      dirty : {{ employeeForm.get("fullName").dirty }} <br />
-      valid : {{ employeeForm.get("fullName").valid }} <br />
+      touched : {{ employeeForm.get("fullName").touched }} <br/>
+      dirty : {{ employeeForm.get("fullName").dirty }} <br/>
+      valid : {{ employeeForm.get("fullName").valid }} <br/>
       FullName Value : {{ employeeForm.get("fullName").value }}
     </td>
     <td style="padding: 10px">
-      touched : {{ employeeForm.get("emailGroup").get("email").touched }} <br />
-      dirty : {{ employeeForm.get("emailGroup").get("email").dirty }} <br />
-      valid : {{ employeeForm.get("emailGroup").get("email").valid }} <br />
+      touched : {{ employeeForm.get("emailGroup").get("email").touched }} <br/>
+      dirty : {{ employeeForm.get("emailGroup").get("email").dirty }} <br/>
+      valid : {{ employeeForm.get("emailGroup").get("email").valid }} <br/>
       FullName Value : {{ employeeForm.get("emailGroup").get("email").value }}
     </td>
   </tr>

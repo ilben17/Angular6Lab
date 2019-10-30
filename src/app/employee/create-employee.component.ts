@@ -214,6 +214,10 @@ export class CreateEmployeeComponent implements OnInit {
   onSubmit(): void {
     console.log(this.employeeForm.value);
   }
+
+  removeSkillsButtonClicked(index: number) : void{
+    (<FormArray>this.employeeForm.get('skills')).removeAt(index);
+  }
 }
 
 function customValidationEmailDomain(emailDomain: string) {
